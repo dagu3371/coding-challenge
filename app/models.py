@@ -6,6 +6,7 @@ class Transaction(BaseModel):
     fromAddress: str
     toAddress: str
     blockNumber: str
+    executionTimestamp: str
     # executedAt: str
     # gasUsed: str
     # gasCostInDollars: str

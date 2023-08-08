@@ -85,3 +85,9 @@ docker-compose run test
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 pytest
 curl http://localhost:8000/
+
+## Calculating Execution Time in a block
+Some approximations have been made since it is difficult to know the exact time that a miner has finished mining a block. Given that the block length is 12 seconds we can presume that from any given block timestamp, i.e when the block was first mined, the transaction could have happened anytime in this 12 second window.
+Based on the transaction index we can know the location of a transaction within a block. With this and the assumption that all transactions are evenly spaced out we define the approximate execution time as:
+`block_timestamp + timedelta(seconds=transaction_index * BLOCK_LENGTH)`
+

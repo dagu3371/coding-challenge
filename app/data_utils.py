@@ -2,16 +2,22 @@ import csv
 import os
 from .models import Transaction
 from .kafka_utils import produce_to_kafka
+from .utils import calculate_execution_timestamp
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_path = os.path.join(current_dir, '..', 'data', 'ethereum_txs.csv')
 
 def process_csv_row(row):
+    execution_timestamp = calculate_execution_timestamp(
+        row.get('block_timestamp', ''),
+        int(row.get('transaction_index', 0)),
+    ).isoformat()
     filtered_data = {
         'hash': row.get('hash', ''),
         'fromAddress': row.get('from_address', ''),
         'toAddress': row.get('to_address', ''),
-        'blockNumber': row.get('block_number', '')
+        'blockNumber': row.get('block_number', ''),
+        'executionTimestamp': execution_timestamp
     }
     try:
         transaction = Transaction(**filtered_data)
