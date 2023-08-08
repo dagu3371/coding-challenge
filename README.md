@@ -91,3 +91,5 @@ Some approximations have been made since it is difficult to know the exact time 
 Based on the transaction index we can know the location of a transaction within a block. With this and the assumption that all transactions are evenly spaced out we define the approximate execution time as:
 `block_timestamp + timedelta(seconds=transaction_index * BLOCK_LENGTH)`
 
+## Calculating Gas Cost
+First we convert gas cost wei `gas_used * gas_price`, then we convert to eth and multiply by the eth price to get a value in dollars.

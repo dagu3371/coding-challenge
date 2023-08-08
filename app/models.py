@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-# from typing import Optional
 
 class Transaction(BaseModel):
     hash: str
@@ -7,6 +6,5 @@ class Transaction(BaseModel):
     toAddress: str
     blockNumber: str
     executionTimestamp: str
-    # executedAt: str
-    # gasUsed: str
-    # gasCostInDollars: str
+    gasUsed: int
+    gasCostInDollars: int

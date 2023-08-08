@@ -7,7 +7,9 @@ def test_transaction_model():
         "fromAddress": "test_from",
         "toAddress": "test_to",
         "blockNumber": "test_block",
-        "executionTimestamp": "test_timestamp"
+        "executionTimestamp": "test_timestamp",
+        "gasUsed": 123,
+        "gasCostInDollars": 321
     }
     transaction = Transaction(**data)
     assert transaction.hash == "test_hash"

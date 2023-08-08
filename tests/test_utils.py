@@ -1,6 +1,6 @@
-from app.models import Transaction
-from app.utils import calculate_execution_timestamp
+from app.utils import get_eth_price_at_timestamp, calculate_execution_timestamp, compute_dollar_cost
 from datetime import datetime, timedelta
+import unittest.mock as mock
 
 BLOCK_LENGTH = 12
 
@@ -16,3 +16,27 @@ def test_calculate_execution_timestamp():
     expected_timestamp = datetime.strptime(block_timestamp, "%Y-%m-%d %H:%M:%S.%f %Z") + timedelta(seconds=transaction_index * BLOCK_LENGTH)
     calculated_timestamp = calculate_execution_timestamp(block_timestamp, transaction_index)
     assert calculated_timestamp == expected_timestamp
+
+@mock.patch('app.utils.requests.get')
+def test_get_eth_price_at_timestamp(mock_get):
+    mock_response = mock.Mock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {"prices": [[1677782400000, 3000]]}
+
+    mock_get.return_value = mock_response
+
+    timestamp = "2023-08-01T07:05:23"
+    eth_price = get_eth_price_at_timestamp(timestamp)
+
+    assert eth_price == 3000
+
+def test_compute_dollar_cost():
+    eth_price = 3000
+    gas_used = 12345678
+    gas_price = 23759
+    gas_cost_wei = gas_used * gas_price
+    gas_cost_eth = gas_cost_wei / 1e9
+    gas_cost_dollars = gas_cost_eth * eth_price
+    scaling_factor = 1e6
+    expected_cost = int(round(gas_cost_dollars * scaling_factor))
+    assert compute_dollar_cost(gas_used, gas_price, eth_price) == expected_cost

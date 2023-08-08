@@ -1,9 +1,11 @@
 import csv
 import os
+import logging
 from .models import Transaction
 from .kafka_utils import produce_to_kafka
-from .utils import calculate_execution_timestamp
+from .utils import calculate_execution_timestamp, get_eth_price_at_timestamp, compute_dollar_cost
 
+logging.basicConfig(level=logging.INFO)
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_path = os.path.join(current_dir, '..', 'data', 'ethereum_txs.csv')
 
@@ -12,12 +14,18 @@ def process_csv_row(row):
         row.get('block_timestamp', ''),
         int(row.get('transaction_index', 0)),
     ).isoformat()
+    eth_price = get_eth_price_at_timestamp(execution_timestamp)
+    gas_used = int(row.get('receipts_gas_used', ''))
+    gas_price = int(row.get('gas_price', ''))
+    gas_cost_dollars = compute_dollar_cost(gas_used, gas_price, eth_price)
     filtered_data = {
         'hash': row.get('hash', ''),
         'fromAddress': row.get('from_address', ''),
         'toAddress': row.get('to_address', ''),
         'blockNumber': row.get('block_number', ''),
-        'executionTimestamp': execution_timestamp
+        'executionTimestamp': execution_timestamp,
+        'gasUsed': gas_used,
+        'gasCostInDollars': gas_cost_dollars,
     }
     try:
         transaction = Transaction(**filtered_data)
