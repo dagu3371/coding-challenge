@@ -73,12 +73,15 @@ That being said,
 
 Good luck!
 
-### Running the application
-## Docker
+## Running the application
+### Docker
 docker-compose up --build
 
-## Locally
-uvicorn app.main:app --host 0.0.0.0 --port 8000
+### Tests
+docker-compose build test
+docker-compose run test
 
-## Testing
+### Local build and test
+uvicorn app.main:app --host 0.0.0.0 --port 8000
 pytest
+curl http://localhost:8000/
