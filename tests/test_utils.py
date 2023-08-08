@@ -35,8 +35,6 @@ def test_compute_dollar_cost():
     gas_used = 12345678
     gas_price = 23759
     gas_cost_wei = gas_used * gas_price
-    gas_cost_eth = gas_cost_wei / 1e9
-    gas_cost_dollars = gas_cost_eth * eth_price
-    scaling_factor = 1e6
-    expected_cost = int(round(gas_cost_dollars * scaling_factor))
+    gas_cost_eth = gas_cost_wei / 1e18
+    expected_cost = gas_cost_eth * eth_price
     assert compute_dollar_cost(gas_used, gas_price, eth_price) == expected_cost

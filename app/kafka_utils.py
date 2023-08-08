@@ -13,14 +13,9 @@ def produce_to_kafka(producer, topic, data):
 
 def deserialize_transaction(data: str):
     try:
-        logger.info("Received transaction data: %s", data)
         transaction_data_dict = json.loads(json.loads(data))
-        logger.info("Decoded transaction data: %s", transaction_data_dict)
-        logger.info(transaction_data_dict)
-        logger.info(type(transaction_data_dict))
         transaction = Transaction(**transaction_data_dict)
     except Exception as e:
-        logger.info("Problem data: %s", data)
         logger.error("Error deserializing: %s", e)
         transaction = None
 

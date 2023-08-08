@@ -23,9 +23,7 @@ async def produce_to_kafka_endpoint(background_tasks: BackgroundTasks):
 
 @app.get("/consume-from-kafka/")
 def consume_from_kafka_endpoint():
-    logger.info("starting?")
     messages = consume_from_kafka('ethereum_transactions', num_messages=10)
-    logger.info("stuck?")
     return {"messages": messages}
 
 @app.get("/transactions/{hash}")
@@ -47,6 +45,3 @@ def get_transaction_by_hash(db: Session = Depends(get_db)):
         "totalGasUsed": total_gas_used,
         "totalGasCostInDollars": total_gas_cost_in_dollars
     }
-
-if __name__ == "__main__":
-    create_tables()

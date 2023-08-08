@@ -1,5 +1,3 @@
-from app.utils import calculate_execution_timestamp
-from app.models import Transaction
 from app.data_utils import process_csv_row
 import unittest.mock as mock
 
@@ -17,15 +15,7 @@ def test_process_csv_row_valid(mock_compute_dollar_cost):
         "gas_price": 2,
     }
 
-    expected_transaction = Transaction(
-        hash="test_hash",
-        fromAddress="test_from",
-        toAddress="test_to",
-        blockNumber="test_block",
-        executionTimestamp=calculate_execution_timestamp(row["block_timestamp"], row["transaction_index"]).isoformat(),
-        gasUsed=2,
-        gasCostInDollars=7
-    )
+    expected_transaction = '{"hash": "test_hash", "fromAddress": "test_from", "toAddress": "test_to", "blockNumber": "test_block", "executionTimestamp": "2023-08-01T07:05:23", "gasUsed": 2, "gasCostInDollars": 7.333827658262595e-15}'
 
     result = process_csv_row(row)
-    assert result == expected_transaction.dict()
+    assert result == expected_transaction

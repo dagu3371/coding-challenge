@@ -29,7 +29,6 @@ def process_csv_row(row):
         'gasCostInDollars': gas_cost_dollars,
     }
     try:
-        # transaction = Transaction(**filtered_data)
         transaction_data = serialize_transaction(filtered_data)
         return transaction_data
     except Exception as e:
