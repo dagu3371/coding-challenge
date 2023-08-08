@@ -3,6 +3,9 @@ services:
     build: .
     ports:
       - "8000:8000"
+    depends_on:
+      - kafka
+      - postgres
 
   postgres:
     image: postgres:latest
@@ -48,3 +51,4 @@ services:
       KAFKA_BROKER_PORT: 9092   # Specify the Kafka broker port
     depends_on:
       - kafka
+      - postgres

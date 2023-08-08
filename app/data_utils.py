@@ -1,6 +1,7 @@
 import csv
 import os
 import logging
+import json
 from .models import Transaction
 from .kafka_utils import produce_to_kafka
 from .utils import calculate_execution_timestamp, get_eth_price_at_timestamp, compute_dollar_cost
@@ -28,17 +29,26 @@ def process_csv_row(row):
         'gasCostInDollars': gas_cost_dollars,
     }
     try:
-        transaction = Transaction(**filtered_data)
-        return transaction.dict()
+        # transaction = Transaction(**filtered_data)
+        transaction_data = serialize_transaction(filtered_data)
+        return transaction_data
     except Exception as e:
         exception_type = type(e).__name__
         raise ValueError(f"Failed to process a row {filtered_data} due to {exception_type}: {e}")
+
+def serialize_transaction(transaction: Transaction):
+    return json.dumps(transaction, default=str)
 
 def produce_data_to_kafka(producer):
     with open(csv_path, 'r') as f:
         csv_reader = csv.DictReader(f)
         next(csv_reader)
+        transactions_produced = 0
         for row in csv_reader:
             transaction_data = process_csv_row(row)
             if transaction_data:
                 produce_to_kafka(producer, 'ethereum_transactions', transaction_data)
+                transactions_produced += 1
+
+                if transactions_produced >= 2:
+                    break

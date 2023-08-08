@@ -4,3 +4,5 @@ pydantic
 kafka-python
 httpx
 requests
+sqlalchemy
+psycopg2-binary

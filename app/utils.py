@@ -33,8 +33,6 @@ def get_eth_price_at_timestamp(timestamp):
 
 def compute_dollar_cost(gas_used, gas_price, eth_price):
     gas_cost_wei = gas_used * gas_price
-    gas_cost_eth = gas_cost_wei / 1e9
+    gas_cost_eth = gas_cost_wei / 1e18
     gas_cost_dollars = gas_cost_eth * eth_price
-    scaling_factor = 1e6
-    gas_cost_dollars = int(round(gas_cost_dollars * scaling_factor))
     return gas_cost_dollars

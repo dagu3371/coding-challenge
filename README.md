@@ -73,6 +73,9 @@ That being said,
 
 Good luck!
 
+## Solution Overview
+From the provided CSV we stream it into a kafka topic. Then we process the data and store it into a Postgres database. We provide two endpoints GET stats and GET hash transaction.
+
 ## Running the application
 ### Docker
 docker-compose up --build
