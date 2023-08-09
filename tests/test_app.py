@@ -70,6 +70,8 @@ def test_get_transaction_by_hash_found(db: Session):
     }
     assert response.json() == expected_response
 
+    db.rollback()
+
 def test_get_stats(db: Session):
     existing_hashes = db.query(Transaction.hash).filter(Transaction.hash.in_(["hash1", "hash2"])).all()
     existing_hashes = {hash for (hash,) in existing_hashes}
@@ -106,3 +108,5 @@ def test_get_stats(db: Session):
         "totalGasUsed": 1357,
         "totalGasCostInDollars": 246913
     }
+
+    db.rollback()
