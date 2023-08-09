@@ -74,41 +74,64 @@ That being said,
 Good luck!
 
 ## Solution Overview
-From the provided CSV we stream it into a kafka topic. Then we process the data and store it into a Postgres database. We provide two endpoints GET stats and GET hash transaction.
+The provided CSV data is streamed into a Kafka topic. The data is then processed and stored in a Postgres database. The API provides endpoints to retrieve transaction details and statistics.
 
 ## Running the application
 ### Docker
+```
 docker-compose up --build
+```
+
+### Accessing docker postgres
+Once you have run the endpoints and have data you can log into the postgres on the docker container. Find the container id and login.
+
+```
+docker ps
+docker exec -it <container_id> psql -U postgres -d ethereum_db
+SELECT * FROM transactions;
+```
 
 ### Tests
+```
 docker-compose build test
 docker-compose run test
+```
 
 ### Local build and test
+```
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 pytest
-
 curl http://localhost:8000/
+```
 
 ## Endpoints
 ## Produce csv messages to Kafka
-Read messages from ethereum csv and store them on a transactions Kafka topic. The execution timestamp as well as the gas cost are calculated before being stored.
+This endpoint reads messages from the Ethereum CSV, processes them, and stores them on a transactions Kafka topic. The execution timestamp and gas cost are calculated before storing.
 
-`curl http://localhost:8000/produce-to-kafka/`
+```
+curl http://localhost:8000/produce-to-kafka/
+```
 
 ## Consume messages from Kafka event stream
-Consume messages from Kafka topic and store them in a Postgres Database
+This endpoint consumes messages from a Kafka topic and stores them in a Postgres Database.
 
-`curl http://localhost:8000/consume-from-kafka/`
+```
+curl http://localhost:8000/consume-from-kafka/
+```
 
-## Fetch Transaction Hash
-Fetch the transactions stored in postgres database
+## Fetch Transaction by Hash
+This endpoint fetches transactions stored in the Postgres database based on a given transaction hash
 
-`curl http://localhost:8000/transactions/0x6f218a5e009c56f8db17e933af7cc98360b699ae88cb85ef31c3eb351ecdee24`
+```
+curl http://localhost:8000/transactions/0x6f218a5e009c56f8db17e933af7cc98360b699ae88cb85ef31c3eb351ecdee24
+```
 
 ## Fetch Stats
-Fetch the stats based on transactions in the postgres database
-`curl http://localhost:8000/stats/`
+This endpoint fetches statistics based on transactions stored in the Postgres database
+
+```
+curl http://localhost:8000/stats/
+```
 
 ## Calculating Execution Time in a block
 Some approximations have been made since it is difficult to know the exact time that a miner has finished mining a block. Given that the block length is 12 seconds we can presume that from any given block timestamp, i.e when the block was first mined, the transaction could have happened anytime in this 12 second window.
