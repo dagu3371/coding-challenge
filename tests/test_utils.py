@@ -1,4 +1,4 @@
-from app.utils import get_eth_price_at_timestamp, calculate_execution_timestamp, compute_dollar_cost
+from app.utils.utils import get_eth_price_at_timestamp, calculate_execution_timestamp, compute_dollar_cost
 from datetime import datetime, timedelta
 import unittest.mock as mock
 
@@ -17,7 +17,7 @@ def test_calculate_execution_timestamp():
     calculated_timestamp = calculate_execution_timestamp(block_timestamp, transaction_index)
     assert calculated_timestamp == expected_timestamp
 
-@mock.patch('app.utils.requests.get')
+@mock.patch('app.utils.utils.requests.get')
 def test_get_eth_price_at_timestamp(mock_get):
     mock_response = mock.Mock()
     mock_response.status_code = 200

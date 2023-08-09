@@ -1,4 +1,4 @@
-from app.models import Transaction
+from app.database.models import Transaction
 
 def test_transaction_model():
     data = {

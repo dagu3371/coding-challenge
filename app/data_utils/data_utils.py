@@ -3,13 +3,13 @@ import os
 import logging
 import json
 import time
-from .models import Transaction
-from .kafka_utils import produce_to_kafka
-from .utils import calculate_execution_timestamp, get_eth_price_at_timestamp, compute_dollar_cost
+from app.database.models import Transaction
+from app.kafka_utils.kafka_utils import produce_to_kafka
+from app.utils.utils import calculate_execution_timestamp, get_eth_price_at_timestamp, compute_dollar_cost
 
 logging.basicConfig(level=logging.INFO)
 current_dir = os.path.dirname(os.path.abspath(__file__))
-csv_path = os.path.join(current_dir, '..', 'data', 'ethereum_txs.csv')
+csv_path = os.path.join(current_dir, '..', '..', 'data', 'ethereum_txs.csv')
 
 def process_csv_row(row):
     execution_timestamp = calculate_execution_timestamp(
@@ -50,6 +50,6 @@ def produce_data_to_kafka(producer):
                 produce_to_kafka(producer, 'ethereum_transactions', transaction_data)
                 transactions_produced += 1
 
-                if transactions_produced >= 20:
+                if transactions_produced >= 10:
                     transactions_produced = 0
                     time.sleep(60)  # Sleep for 1 minute to bypass Coingecko rate limit

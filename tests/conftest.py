@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy.orm import Session
-from app.db_config import engine, Session
-from app.db_utils import create_tables
+from app.database.db_config import engine, Session
+from app.database.db_utils import create_tables
 
 @pytest.fixture(autouse=True)
 def setup_database():

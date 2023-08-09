@@ -1,10 +1,10 @@
 import os
 from unittest.mock import patch
 from app.main import app
-from app.models import Transaction
+from app.database.models import Transaction
 from sqlalchemy.orm import Session
 from app.main import app
-from app.models import Transaction
+from app.database.models import Transaction
 from sqlalchemy.orm import Session
 from fastapi.testclient import TestClient
 from sqlalchemy.orm.exc import NoResultFound
@@ -15,7 +15,7 @@ KAFKA_BROKER_PORT = os.getenv("KAFKA_BROKER_PORT")
 
 client = TestClient(app)
 
-@patch('app.main.get_db', autospec=True)
+@patch('app.endpoints.transactions.get_db', autospec=True)
 def test_get_transaction_by_hash_not_found(mock_get_db):
     mock_db = mock_get_db.return_value
     mock_db.query.return_value.filter_by.return_value.one.side_effect = NoResultFound

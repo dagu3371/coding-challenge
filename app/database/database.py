@@ -1,4 +1,4 @@
-from app import db_config
+from app.database import db_config
 
 def create_transaction_db(transaction):
     try:

@@ -1,4 +1,4 @@
-from app.kafka_utils import produce_to_kafka
+from app.kafka_utils.kafka_utils import produce_to_kafka
 
 def test_produce_to_kafka():
     class MockProducer:

@@ -1,7 +1,7 @@
-from app.data_utils import process_csv_row
+from app.data_utils.data_utils import process_csv_row
 import unittest.mock as mock
 
-@mock.patch('app.utils.compute_dollar_cost')
+@mock.patch('app.utils.utils.compute_dollar_cost')
 def test_process_csv_row_valid(mock_compute_dollar_cost):
     mock_compute_dollar_cost.return_value = 42
     row = {

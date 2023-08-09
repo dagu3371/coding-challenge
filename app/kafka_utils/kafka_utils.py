@@ -1,6 +1,6 @@
 from kafka import KafkaConsumer
-from app.database import create_transaction_db
-from app.models import Transaction
+from app.database.database import create_transaction_db
+from app.database.models import Transaction
 import json
 import logging
 
