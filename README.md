@@ -87,19 +87,23 @@ docker-compose run test
 ### Local build and test
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 pytest
+
 curl http://localhost:8000/
 
 ## Endpoints
 ## Produce csv messages to Kafka
 Read messages from ethereum csv and store them on a transactions Kafka topic. The execution timestamp as well as the gas cost are calculated before being stored.
+
 `curl http://localhost:8000/produce-to-kafka/`
 
 ## Consume messages from Kafka event stream
 Consume messages from Kafka topic and store them in a Postgres Database
+
 `curl http://localhost:8000/consume-from-kafka/`
 
 ## Fetch Transaction Hash
 Fetch the transactions stored in postgres database
+
 `curl http://localhost:8000/transactions/0x6f218a5e009c56f8db17e933af7cc98360b699ae88cb85ef31c3eb351ecdee24`
 
 ## Fetch Stats
@@ -109,7 +113,12 @@ Fetch the stats based on transactions in the postgres database
 ## Calculating Execution Time in a block
 Some approximations have been made since it is difficult to know the exact time that a miner has finished mining a block. Given that the block length is 12 seconds we can presume that from any given block timestamp, i.e when the block was first mined, the transaction could have happened anytime in this 12 second window.
 Based on the transaction index we can know the location of a transaction within a block. With this and the assumption that all transactions are evenly spaced out we define the approximate execution time as:
+
 `block_timestamp + timedelta(seconds=transaction_index * BLOCK_LENGTH)`
 
 ## Calculating Gas Cost
 First we convert gas cost wei `gas_used * gas_price`, then we convert to eth and multiply by the eth price to get a value in dollars.
+
+## Nice to have
+- Polling using Kafka connect for example so we aren't manually triggering the kafka source and sink operations
+- Airflow to manage data quality
