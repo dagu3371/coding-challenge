@@ -2,6 +2,7 @@ import csv
 import os
 import logging
 import json
+import time
 from .models import Transaction
 from .kafka_utils import produce_to_kafka
 from .utils import calculate_execution_timestamp, get_eth_price_at_timestamp, compute_dollar_cost
@@ -49,5 +50,6 @@ def produce_data_to_kafka(producer):
                 produce_to_kafka(producer, 'ethereum_transactions', transaction_data)
                 transactions_produced += 1
 
-                if transactions_produced >= 2:
-                    break
+                if transactions_produced >= 20:
+                    transactions_produced = 0
+                    time.sleep(60)  # Sleep for 1 minute to bypass Coingecko rate limit

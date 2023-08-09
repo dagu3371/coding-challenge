@@ -21,7 +21,7 @@ def deserialize_transaction(data: str):
 
     return transaction
 
-def consume_from_kafka(topic, num_messages=10):
+def consume_from_kafka(topic):
     consumed_transactions = []
 
     consumer = KafkaConsumer(
@@ -32,31 +32,21 @@ def consume_from_kafka(topic, num_messages=10):
         enable_auto_commit=True,
         value_deserializer=lambda x: x.decode('utf-8')
     )
-    logger.info(consumer)
     try:
-        for _ in range(num_messages):
-            message = next(consumer)
-            logger.info("Received kafka message: %s", message)
+        for message in consumer:
             transaction_data = message.value
-            logger.info("Received transaction data: %s", transaction_data)
             try:
-                logger.info('desserializing')
                 transaction = deserialize_transaction(transaction_data)
-                logger.info('uhhh')
-                logger.info(transaction)
                 create_transaction_db(transaction)
                 consumed_transactions.append({"partition": message.partition,
                                               "offset": message.offset,
                                               "key": message.key,
                                               "value": transaction_data})
-                logger.info(consumed_transactions)
             except Exception as e:
                 logger.error("Error processing message: %s", e)
 
+        consumer.close()
+        return consumed_transactions
     except Exception as e:
         logger.error("Error consuming from Kafka: %s", e)
         raise
-    consumer.close()
-    logger.info('Finished')
-    logger.info(consumed_transactions)
-    return consumed_transactions

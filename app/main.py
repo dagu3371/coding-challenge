@@ -22,9 +22,9 @@ async def produce_to_kafka_endpoint(background_tasks: BackgroundTasks):
     return {"status": "Data is being produced to Kafka in the background"}
 
 @app.get("/consume-from-kafka/")
-def consume_from_kafka_endpoint():
-    messages = consume_from_kafka('ethereum_transactions', num_messages=10)
-    return {"messages": messages}
+async def consume_from_kafka_endpoint(background_tasks: BackgroundTasks):
+    background_tasks.add_task(consume_from_kafka, 'ethereum_transactions')
+    return {"status": "Data is being consumed from Kafka in the background"}
 
 @app.get("/transactions/{hash}")
 def get_transaction_by_hash(hash: str, db: Session = Depends(get_db)):
