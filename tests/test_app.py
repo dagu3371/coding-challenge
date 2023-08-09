@@ -37,7 +37,7 @@ def test_get_transaction_by_hash_found(db: Session):
             blockNumber=123,
             executionTimestamp="2023-08-01T07:05:23",
             gasUsed=678,
-            gasCostInDollars=123456
+            gasCostInDollars=3
         ),
         Transaction(
             hash="hash2",
@@ -46,7 +46,7 @@ def test_get_transaction_by_hash_found(db: Session):
             blockNumber=124,
             executionTimestamp="2023-08-01T08:05:23",
             gasUsed=679,
-            gasCostInDollars=123457
+            gasCostInDollars=5
         )
     ]
 
@@ -66,7 +66,7 @@ def test_get_transaction_by_hash_found(db: Session):
         "blockNumber": 123,
         "executionTimestamp": "2023-08-01T07:05:23",
         "gasUsed": 678,
-        "gasCostInDollars": 123456
+        "gasCostInDollars": 3
     }
     assert response.json() == expected_response
 
@@ -84,7 +84,7 @@ def test_get_stats(db: Session):
             blockNumber=123,
             executionTimestamp="2023-08-01T07:05:23",
             gasUsed=678,
-            gasCostInDollars=123456
+            gasCostInDollars=8
         ),
         Transaction(
             hash="hash2",
@@ -93,7 +93,7 @@ def test_get_stats(db: Session):
             blockNumber=124,
             executionTimestamp="2023-08-01T08:05:23",
             gasUsed=679,
-            gasCostInDollars=123457
+            gasCostInDollars=7
         )
     ]
 
@@ -106,7 +106,7 @@ def test_get_stats(db: Session):
     assert response.json() == {
         "totalTransactionsInDB": 2,
         "totalGasUsed": 1357,
-        "totalGasCostInDollars": 246913
+        "totalGasCostInDollars": 8
     }
 
     db.rollback()
