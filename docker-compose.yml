@@ -47,8 +47,8 @@ services:
     volumes:
       - ./tests:/app/tests
     environment:
-      KAFKA_BROKER_HOST: kafka  # Specify the Kafka service name from docker-compose.yml
-      KAFKA_BROKER_PORT: 9092   # Specify the Kafka broker port
+      KAFKA_BROKER_HOST: kafka
+      KAFKA_BROKER_PORT: 9092
     depends_on:
       - kafka
       - postgres
